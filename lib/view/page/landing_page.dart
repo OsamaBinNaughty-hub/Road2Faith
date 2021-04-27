@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:road_2_faith/controller/page/landing_page_controller.dart';
 import 'package:road_2_faith/view/widget/base_view.dart';
+import 'package:road_2_faith/view/widget/title.dart';
 // TODO: No scroll physics & make the Create Account text dependend on the height on the Container (Bottom of page always)
 class Landing extends StatefulWidget {
   @override
@@ -54,6 +55,7 @@ class _LandingState extends State<Landing> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               //TODO: Wich widget should show? (SignIn / SignUp / TOS / Forgot password / ...)
+                              _signIn(_rememberMe),
                             ],
                           ),
                         ),
@@ -71,11 +73,18 @@ class _LandingState extends State<Landing> {
     Key _formKey;
     return Column(
       children: [
-        _title("Welcome", "to", "Road2Faith", "Playfair", 45, "4285F4", context),
+        LandingTitle(
+          first: "Welcome",
+          second: "to",
+          third: "Road2Faith",
+          fontFamily: "Playfair",
+          fontSize: 45.0,
+          color: "4285F4",
+        ),
         SizedBox(height: 128,),
-        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress, context),
+        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress),
         SizedBox(height: 24,),
-        _passwordField(_formKey, context),
+        _passwordField(_formKey),
         SizedBox(height: 8,),
         Row(
           children: [
@@ -97,7 +106,17 @@ class _LandingState extends State<Landing> {
             ),
             Spacer(),
             // 2. Clickable Forgot Password? text
-            Text("Forgot Password?"),
+            TextButton(
+              child: Text(
+                  "Forgot Password?",
+                style: TextStyle(
+                  color: Color(0xff4285F4),
+                ),
+              ),
+              onPressed: (){
+                //TODO: Push to forgot password page
+              },
+            ),
           ],
         ),
         SizedBox(height: 8,),
@@ -158,15 +177,22 @@ class _LandingState extends State<Landing> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _title("Create", "an", "Account", "Playfair", 45, "4285F4", context),
+        LandingTitle(
+          first: "Create",
+          second: "an",
+          third: "Account",
+          fontFamily: "Playfair",
+          fontSize: 45.0,
+          color: "4285F4",
+        ),
         SizedBox(height: 44,),
-        _textFormField("Enter Username", "Username cannot be empty.", TextInputType.name, context),
+        _textFormField("Enter Username", "Username cannot be empty.", TextInputType.name),
         SizedBox(height: 24,),
-        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress, context),
+        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress),
         SizedBox(height: 24,),
-        _passwordField(_formKey, context),
+        _passwordField(_formKey),
         SizedBox(height: 24,),
-        _passwordField(_formKey, context),
+        _passwordField(_formKey),
         SizedBox(height: 8,),
         Row(
           children: [
@@ -343,7 +369,7 @@ class _LandingState extends State<Landing> {
     );
   }
 
-  Widget _textFormField(String labelText, String validator, TextInputType strType, BuildContext ctx){
+  Widget _textFormField(String labelText, String validator, TextInputType strType){
     return TextFormField(
       decoration: InputDecoration(
           labelText: labelText,
@@ -365,7 +391,7 @@ class _LandingState extends State<Landing> {
     );
   }
 
-  Widget _passwordField(Key formKey, BuildContext context){
+  Widget _passwordField(Key formKey){
     bool _obscureText = true;
     return TextFormField(
       key: formKey,
@@ -398,67 +424,5 @@ class _LandingState extends State<Landing> {
       ),
     );
   }
-  
-  /// This widget creates a column with the signature header in the landing page.
-  /// Specify the 3 Strings in first/second/third
-  /// Specify used font in fontFamily
-  /// Specify fontSize
-  /// Choose HEX color & will automatically make 2 opacity's
-  Widget _title(String first, String second, String third, String fontFamily, double fontSize, String color, BuildContext ctx){
 
-    // Use the HEX String & make 2 colors with opacity 50% & 100%
-    String strColor50 = "0x80${color}";
-    String strColor100 = "0xff${color}";
-
-    // parse the 2 Strings
-    var c1 = int.parse(strColor50);
-    var c2 = int.parse(strColor100);
-
-    // assert the String in int
-    assert(c1 is int);
-    assert(c2 is int);
-
-    // Header as Widget
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          first,
-          style: TextStyle(
-            fontFamily: fontFamily,
-            fontSize: fontSize,
-            color: Color(c1), // 50% opacity
-          ),
-        ),
-        RichText(
-          text: TextSpan(
-            text: "${second} ",
-            style: TextStyle(
-              fontFamily: fontFamily,
-              fontSize: fontSize,
-              color: Color(c1), // 50% opacity
-            ),
-            children: [
-              TextSpan(
-                text: third,
-                style: TextStyle(
-                  fontFamily: fontFamily,
-                  fontSize: fontSize,
-                  color: Color(c2), // 100% opacity
-                ),
-              ),
-              TextSpan(
-                text: ".",
-                style: TextStyle(
-                  fontFamily: fontFamily,
-                  fontSize: fontSize,
-                  color: Color(c2), // 100% opacity
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
