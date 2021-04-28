@@ -1,10 +1,19 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:road_2_faith/controller/page/landing_page_controller.dart';
+import 'package:road_2_faith/view/page/forgot_password_page.dart';
 import 'package:road_2_faith/view/widget/base_view.dart';
-import 'package:road_2_faith/view/widget/title.dart';
+import 'package:road_2_faith/view/widget/checkbox_with_text.dart';
+import 'package:road_2_faith/view/widget/landing_big_button.dart';
+import 'package:road_2_faith/view/widget/landing_password_field.dart';
+import 'package:road_2_faith/view/widget/landing_text_field.dart';
+import 'package:road_2_faith/view/widget/landing_title.dart';
+
 // TODO: No scroll physics & make the Create Account text dependend on the height on the Container (Bottom of page always)
+// TODO: Remember me bool should be dependend on User info.
+// TODO: A way to go to the Sign Up page from Sign In.
+// TODO: Better logging of onPressed/onTap functions.
+
 class Landing extends StatefulWidget {
   @override
   _LandingState createState() => _LandingState();
@@ -13,9 +22,6 @@ class Landing extends StatefulWidget {
 class _LandingState extends State<Landing> {
   @override
   Widget build(BuildContext context) {
-    // TODO: Remember me bool should be dependend on User info
-    bool _rememberMe = false;
-    bool _TOS = false;
     final onAuthorization = (String content){
         Navigator.popAndPushNamed(context, '/main');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -30,38 +36,45 @@ class _LandingState extends State<Landing> {
         },
         builder: (context, controller, child){
           return Scaffold(
+            backgroundColor: Colors.white,
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 32.0),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Container(
-                      height: double.infinity,
-                      child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              //TODO: Wich widget should show? (SignIn / SignUp / TOS / Forgot password / ...)
-                              _signIn(_rememberMe),
-                            ],
+                      Container(
+                        height: double.infinity,
+                        child: SingleChildScrollView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    _signIn(controller, context),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -69,7 +82,8 @@ class _LandingState extends State<Landing> {
         },
     );
   }
-  Widget _signIn(bool _rememberMe){
+
+  Widget _signIn(LandingController controller, BuildContext context){
     Key _formKey;
     return Column(
       children: [
@@ -82,61 +96,48 @@ class _LandingState extends State<Landing> {
           color: "4285F4",
         ),
         SizedBox(height: 128,),
-        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress),
+        LandingTextField(
+          labelText: "Enter Email",
+          validatorText: "Email cannot be empty.",
+          keyBoardType: TextInputType.emailAddress,
+          textEditingController: controller.emailController,
+        ),
         SizedBox(height: 24,),
-        _passwordField(_formKey),
+        LandingPasswordField(
+          fieldKey: _formKey,
+          labelText: "Enter Password",
+          validatorText: "Password cannot be empty",
+        ),
         SizedBox(height: 8,),
         Row(
           children: [
-
-            // 1. checkbox & Remember me
-            Row(
-              children: [
-                // TODO: Remember me checkbox doesn't change state
-                Checkbox(
-                  value: _rememberMe,
-                  onChanged: (value){
-                    setState(() {
-                      _rememberMe = !_rememberMe;
-                    });
-                  },
-                ),
-                Text("Remember me"),
-              ],
+            CheckBoxWithText(
+              text: "Remember me",
             ),
             Spacer(),
-            // 2. Clickable Forgot Password? text
             TextButton(
               child: Text(
-                  "Forgot Password?",
+                "Forgot Password?",
                 style: TextStyle(
                   color: Color(0xff4285F4),
                 ),
               ),
               onPressed: (){
-                //TODO: Push to forgot password page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ForgotPasswordPage()
+                  ),
+                );
               },
             ),
           ],
         ),
         SizedBox(height: 8,),
-        ButtonTheme(
-          minWidth: double.infinity,
-          height: 60.0,
-          child: RaisedButton(
-            onPressed: () {},
-            color: Color(0xff4285F4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Text(
-              "Sign In",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
+        LandingBigButton(
+          title: "Sign In",
+          //TODO: Sign In + push to MainPage
+          onPressed: (){},
         ),
         SizedBox(height: 16,),
         Text(
@@ -147,32 +148,12 @@ class _LandingState extends State<Landing> {
         ),
         SizedBox(height: 12,),
         _socialButtonRow(),
-        SizedBox(height: 94,),
-        RichText(
-          text: TextSpan(
-              text: "Don't have an account? ",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              children: [
-                TextSpan(
-                    text: "Create new one!",
-                    style: TextStyle(
-                      color: Color(0xff4285F4),
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        // TODO: Navigate to sign up
-                      }
-                ),
-              ]
-          ),
-        ),
       ],
     );
   }
 
-  Widget _signUp(bool _TOS){
+  Widget _signUp(LandingController controller, BuildContext context){
+    String password;
     Key _formKey;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,112 +167,52 @@ class _LandingState extends State<Landing> {
           color: "4285F4",
         ),
         SizedBox(height: 44,),
-        _textFormField("Enter Username", "Username cannot be empty.", TextInputType.name),
+        LandingTextField(
+          labelText: "Enter Username",
+          validatorText: "Username cannot be empty.",
+          keyBoardType: TextInputType.name,
+          textEditingController: controller.usernameController,
+        ),
         SizedBox(height: 24,),
-        _textFormField("Enter Email", "Email cannot be empty.", TextInputType.emailAddress),
+        LandingTextField(
+          labelText: "Enter Email",
+          validatorText: "Email cannot be empty.",
+          keyBoardType: TextInputType.emailAddress,
+          textEditingController: controller.emailController,
+        ),
         SizedBox(height: 24,),
-        _passwordField(_formKey),
+        LandingPasswordField(
+          fieldKey: _formKey,
+          labelText: "Enter Password",
+          validatorText: "Password must atleast be 8 characters.",
+          onFieldSubmitted: (value) => password,
+          textEditingController: controller.passwordController,
+        ),
         SizedBox(height: 24,),
-        _passwordField(_formKey),
-        SizedBox(height: 8,),
-        Row(
-          children: [
-
-            // 1. checkbox & TOS
-            Row(
-              children: [
-                // TODO: Remember me checkbox doesn't change state
-                Checkbox(
-                  value: _TOS,
-                  onChanged: (value){
-                    setState(() {
-                      _TOS = !_TOS;
-                    });
-                  },
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "By signing up you accept our ",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Terms Of Use",
-                        style: TextStyle(
-                          color: Color(0xff4285F4),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+        LandingPasswordField(
+          fieldKey: _formKey,
+          labelText: "Verify Password",
+          validatorText: "Must match the other password.",
+          textEditingController: controller.passwordVerifyController,
         ),
         SizedBox(height: 8,),
-        ButtonTheme(
-          minWidth: double.infinity,
-          height: 60.0,
-          child: RaisedButton(
-            onPressed: () {},
-            color: Color(0xff4285F4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Text(
-              "Sign Up",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
+        CheckBoxWithTextAndButton(
+          text: "By signing up you accept the",
+          textInButton: "Terms Of Use",
+          onPressed: (){},
         ),
-        SizedBox(height: 16,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "or",
-              style: TextStyle(
-                  fontSize: 18.0
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12,),
-        _socialButtonRow(),
-        SizedBox(height: 12,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RichText(
-              text: TextSpan(
-                  text: "Already have an account? ",
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  children: [
-                    TextSpan(
-                        text: "Sign in here!",
-                        style: TextStyle(
-                          color: Color(0xff4285F4),
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // TODO: Navigate to sign In
-                          }
-                    ),
-                  ]
-              ),
-            ),
-          ],
+        SizedBox(height: 8,),
+        LandingBigButton(
+          title: "Sign Up",
+          // TODO: Sign Up + push to Sing In
+          onPressed: (){},
         ),
       ],
     );
   }
 
+  // TODO: Social SignIn with FireBase.
+  // TODO: Better Social bubbles.
   Widget _socialButtonRow(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -316,7 +237,7 @@ class _LandingState extends State<Landing> {
             ),
           ),
           onPressed: (){
-            print('click clack Facebook');
+            print('Facebook SignIn requested');
           },
         ),
         ElevatedButton(
@@ -339,7 +260,7 @@ class _LandingState extends State<Landing> {
             ),
           ),
           onPressed: (){
-            print('click clack Google');
+            print('Google SignIn requested');
           },
         ),
         ElevatedButton(
@@ -362,67 +283,10 @@ class _LandingState extends State<Landing> {
             ),
           ),
           onPressed: (){
-            print('click clack Twitta');
+            print('Twitter SignIn requested');
           },
         ),
       ],
     );
   }
-
-  Widget _textFormField(String labelText, String validator, TextInputType strType){
-    return TextFormField(
-      decoration: InputDecoration(
-          labelText: labelText,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide(),
-          )
-      ),
-      validator: (val){
-        if(val.length == 0){
-          return validator;
-        } else {
-          return null;
-        }
-      },
-      keyboardType: strType,
-
-    );
-  }
-
-  Widget _passwordField(Key formKey){
-    bool _obscureText = true;
-    return TextFormField(
-      key: formKey,
-      obscureText: _obscureText,
-      //maxLength: 42,
-      validator: (val){
-        if(val.length == 0){
-          return "Password cannot be empty.";
-        } else {
-          return null;
-        }
-      },
-      decoration: InputDecoration(
-        labelText: "Enter Password",
-        //helperText: "Must be 8 characters",
-        fillColor: Colors.white,
-        // TODO: Obscure text state doens't work ? :/
-        suffixIcon: GestureDetector(
-          onTap: (){
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-          child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide(),
-        ),
-      ),
-    );
-  }
-
 }
