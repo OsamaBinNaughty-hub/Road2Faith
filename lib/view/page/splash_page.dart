@@ -1,6 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+
 
 class SplashPage extends StatefulWidget {
   final Function onComplete;
@@ -17,16 +21,32 @@ class _SplashPageState extends State<SplashPage> {
     _initialize();
   }
 
+  FirebaseCrashlytics crashlytics;
   _initialize() async {
+    WidgetsFlutterBinding.ensureInitialized();
     /// Initialize all app dependencies
+    await Firebase.initializeApp();
 
     /// initialize Firebase and related services
 
-    // This should be in setupFirebase().then(_){}
+
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    final Function originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails errorDetails)
+     async {
+        print(errorDetails);
+
+        await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+
+        originalOnError(errorDetails);
+      };
+
+
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       widget.onComplete();
     });
   }
+
 
   @override
   Widget build(BuildContext context){
