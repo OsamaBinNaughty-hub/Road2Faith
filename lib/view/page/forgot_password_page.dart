@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:road_2_faith/controller/page/landing_page_controller.dart';
+import 'package:road_2_faith/view/page/confirm_forgot_password_page.dart';
 import 'package:road_2_faith/view/widget/base_view.dart';
 import 'package:road_2_faith/view/widget/landing_big_button.dart';
 import 'package:road_2_faith/view/widget/landing_text_field.dart';
@@ -62,6 +63,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   fontFamily: "Playfair",
                                   fontSize: 45.0,
                                   color: "4285F4",
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                 ),
                                 SizedBox(height: 24.0,),
                                 Container(
@@ -79,8 +81,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 SizedBox(height: 24.0,),
                                 LandingBigButton(
                                   title: "Send Instructions",
-                                  //TODO: Send email with instructions + temporary widget screen??
-                                  onPressed: (){},
+                                  //TODO: Send email with instructions
+                                  onPressed: () => Navigator.popAndPushNamed(context, "/confirmforgotpassword"),
                                 ),
                               ],
                             ),

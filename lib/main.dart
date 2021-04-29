@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:road_2_faith/locator.dart';
+import 'package:road_2_faith/view/page/confirm_forgot_password_page.dart';
+import 'package:road_2_faith/view/page/forgot_password_page.dart';
 import 'package:road_2_faith/view/page/landing_page.dart';
 import 'file:///C:/Users/dries/OneDrive/Documenten/apps/road_2_faith/lib/view/page/splash_page.dart';
 import 'package:road_2_faith/view/page/main_page.dart';
+import 'package:road_2_faith/view/page/sign_up_page.dart';
 
 void main() {
   setupLocator();
@@ -25,6 +28,9 @@ class MyApp extends StatelessWidget {
         ),
         "/landing": (context) => Landing(),
         "/main": (context) => MainPage(),
+        "/signUp": (context) => SignUpPage(),
+        "/forgotpassword": (context) => ForgotPasswordPage(),
+        "/confirmforgotpassword": (context) => ConfirmForgotPasswordPage(),
       },
     );
   }

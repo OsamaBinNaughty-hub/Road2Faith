@@ -8,6 +8,7 @@ class LandingTitle extends StatefulWidget {
     this.fontFamily,
     this.fontSize,
     this.color,
+    this.crossAxisAlignment,
   });
 
   final String first;
@@ -16,6 +17,7 @@ class LandingTitle extends StatefulWidget {
   final String fontFamily;
   final double fontSize;
   final String color;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   _LandingTitleState createState() => _LandingTitleState();
@@ -43,7 +45,7 @@ class _LandingTitleState extends State<LandingTitle> {
     assert(c2 is int);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: widget.crossAxisAlignment,
       children: [
         Text(
           widget.first,

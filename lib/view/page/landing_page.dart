@@ -5,14 +5,17 @@ import 'package:road_2_faith/view/page/forgot_password_page.dart';
 import 'package:road_2_faith/view/widget/base_view.dart';
 import 'package:road_2_faith/view/widget/checkbox_with_text.dart';
 import 'package:road_2_faith/view/widget/landing_big_button.dart';
+import 'package:road_2_faith/view/widget/landing_bottom_text.dart';
 import 'package:road_2_faith/view/widget/landing_password_field.dart';
 import 'package:road_2_faith/view/widget/landing_text_field.dart';
 import 'package:road_2_faith/view/widget/landing_title.dart';
 
-// TODO: No scroll physics & make the Create Account text dependend on the height on the Container (Bottom of page always)
+// TODO: No scroll physics in landing page.
+// TODO: Static bottom text.
 // TODO: Remember me bool should be dependend on User info.
 // TODO: A way to go to the Sign Up page from Sign In.
 // TODO: Better logging of onPressed/onTap functions.
+// TODO: Find a way to clear the Navigator Stack in certain pushes.
 
 class Landing extends StatefulWidget {
   @override
@@ -41,40 +44,37 @@ class _LandingState extends State<Landing> {
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                       ),
-                      Container(
-                        height: double.infinity,
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    _signIn(controller, context),
-                                  ],
-                                ),
-                              ],
-                            ),
+                    ),
+                    Container(
+                      height: double.infinity,
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  _signIn(controller, context),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -94,6 +94,7 @@ class _LandingState extends State<Landing> {
           fontFamily: "Playfair",
           fontSize: 45.0,
           color: "4285F4",
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
         SizedBox(height: 128,),
         LandingTextField(
@@ -148,64 +149,12 @@ class _LandingState extends State<Landing> {
         ),
         SizedBox(height: 12,),
         _socialButtonRow(),
-      ],
-    );
-  }
-
-  Widget _signUp(LandingController controller, BuildContext context){
-    String password;
-    Key _formKey;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        LandingTitle(
-          first: "Create",
-          second: "an",
-          third: "Account",
-          fontFamily: "Playfair",
-          fontSize: 45.0,
-          color: "4285F4",
-        ),
-        SizedBox(height: 44,),
-        LandingTextField(
-          labelText: "Enter Username",
-          validatorText: "Username cannot be empty.",
-          keyBoardType: TextInputType.name,
-          textEditingController: controller.usernameController,
-        ),
-        SizedBox(height: 24,),
-        LandingTextField(
-          labelText: "Enter Email",
-          validatorText: "Email cannot be empty.",
-          keyBoardType: TextInputType.emailAddress,
-          textEditingController: controller.emailController,
-        ),
-        SizedBox(height: 24,),
-        LandingPasswordField(
-          fieldKey: _formKey,
-          labelText: "Enter Password",
-          validatorText: "Password must atleast be 8 characters.",
-          onFieldSubmitted: (value) => password,
-          textEditingController: controller.passwordController,
-        ),
-        SizedBox(height: 24,),
-        LandingPasswordField(
-          fieldKey: _formKey,
-          labelText: "Verify Password",
-          validatorText: "Must match the other password.",
-          textEditingController: controller.passwordVerifyController,
-        ),
-        SizedBox(height: 8,),
-        CheckBoxWithTextAndButton(
-          text: "By signing up you accept the",
-          textInButton: "Terms Of Use",
-          onPressed: (){},
-        ),
-        SizedBox(height: 8,),
-        LandingBigButton(
-          title: "Sign Up",
-          // TODO: Sign Up + push to Sing In
-          onPressed: (){},
+        SizedBox(height: 65,),
+        LandingBottomText(
+          show: true,
+          firstStr: "Don't have an account?",
+          secondStr: "Create new one!",
+          pushWidget: "/signUp",
         ),
       ],
     );
