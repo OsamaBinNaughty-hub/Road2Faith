@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
 
 
 class SplashPage extends StatefulWidget {
@@ -21,32 +20,30 @@ class _SplashPageState extends State<SplashPage> {
     _initialize();
   }
 
-  FirebaseCrashlytics crashlytics;
-  _initialize() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    /// Initialize all app dependencies
+  setupFirebase() async {
+    ///initalize Firebase
     await Firebase.initializeApp();
+    debugPrint('Firebase initialized...');
+
+    /// Enable FirebaseCrashlytics
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    debugPrint('Firebase Crashlytics collection enabled...');
+
+    /// Pass all uncaught errors from the framework to Crashlytics.
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    debugPrint('Firebase Crashlytics flutter errors enabled...');
+  }
+
+  _initialize() async {
+    /// Initialize all app dependencies
 
     /// initialize Firebase and related services
-
-
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    final Function originalOnError = FlutterError.onError;
-    FlutterError.onError = (FlutterErrorDetails errorDetails)
-     async {
-        print(errorDetails);
-
-        await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-
-        originalOnError(errorDetails);
-      };
 
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       widget.onComplete();
     });
   }
-
 
   @override
   Widget build(BuildContext context){
