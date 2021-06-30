@@ -20,9 +20,11 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
-dependencies:
+dependencies: 
   flutter:
     sdk: flutter
+  google_sign_in: ^4.1.0
+  flutter_facebook_login: ^3.0.0
 
   # do not change to cupertino_icons to ^1.0.2 until dart enforces null safety.  This should be next flutter/dart major udpate
   cupertino_icons: ^1.0.0

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:road_2_faith/locator.dart';
 import 'package:road_2_faith/view/page/confirm_forgot_password_page.dart';
@@ -11,6 +12,7 @@ void main() {
   setupLocator();
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override

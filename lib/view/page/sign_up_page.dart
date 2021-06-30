@@ -69,6 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _signUp(LandingController controller, BuildContext context){
     String password;
+    String email;
     Key _formKey;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,8 +122,9 @@ class _SignUpPageState extends State<SignUpPage> {
         LandingBigButton(
           title: "Sign Up",
           // TODO: Sign Up + push to Sing In
-          onPressed: (){},
+          onPressed: (){}
         ),
+
         SizedBox(height: 80,),
         LandingBottomText(
           show: true,
