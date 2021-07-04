@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "803954678520",
+    "project_id": "road2faith-b0b6f",
+    "storage_bucket": "road2faith-b0b6f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803954678520:android:e800271034cdb93a4c390d",
+        "android_client_info": {
+          "package_name": "osamabinnaughty.road_2_faith"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803954678520-1mgj969tmhtcr5squib8ct1dni8c96il.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "osamabinnaughty.road_2_faith",
+            "certificate_hash": "7a196a4614a2fef4914d12efba04a344464c7931"
+          }
+        },
+        {
+          "client_id": "803954678520-pecnoa034bbdc4itc9enu434pisrj3nl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5_h6CG4ZBFiitwUfNsO0sBk81dd9TJok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803954678520-pecnoa034bbdc4itc9enu434pisrj3nl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

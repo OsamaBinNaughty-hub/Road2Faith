@@ -1,7 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:road_2_faith/controller/page/google_sign_in.dart';
 import 'package:road_2_faith/controller/page/landing_page_controller.dart';
 import 'package:road_2_faith/view/page/forgot_password_page.dart';
+import 'package:road_2_faith/view/page/main_page.dart';
 import 'package:road_2_faith/view/widget/base_view.dart';
 import 'package:road_2_faith/view/widget/checkbox_with_text.dart';
 import 'package:road_2_faith/view/widget/landing_big_button.dart';
@@ -9,6 +12,7 @@ import 'package:road_2_faith/view/widget/landing_bottom_text.dart';
 import 'package:road_2_faith/view/widget/landing_password_field.dart';
 import 'package:road_2_faith/view/widget/landing_text_field.dart';
 import 'package:road_2_faith/view/widget/landing_title.dart';
+import 'package:road_2_faith/controller/page/facebook_login.dart';
 
 // TODO: No scroll physics in landing page.
 // TODO: Static bottom text.
@@ -25,66 +29,68 @@ class Landing extends StatefulWidget {
 class _LandingState extends State<Landing> {
   @override
   Widget build(BuildContext context) {
-    final onAuthorization = (String content){
-        Navigator.popAndPushNamed(context, '/main');
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(content)
-            ),
-        );
+    final onAuthorization = (String content) {
+      Navigator.popAndPushNamed(context, '/main');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(content)
+        ),
+      );
     };
     return BaseView<LandingController>(
-        onControllerReady: (controller){
-          controller.onAuthorization = onAuthorization;
-        },
-        builder: (context, controller, child){
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
+      onControllerReady: (controller) {
+        controller.onAuthorization = onAuthorization;
+      },
+      builder: (context, controller, child) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Stack(
+                children: [
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                     ),
-                    Container(
-                      height: double.infinity,
-                      child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  _signIn(controller, context),
-                                ],
-                              ),
-                            ],
-                          ),
+                  ),
+                  Container(
+                    height: double.infinity,
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.fromLTRB(0, 15.0, 0, 30.0),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(32, 64, 32, 16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                _signIn(controller, context),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        );
+      },
     );
   }
 
-  Widget _signIn(LandingController controller, BuildContext context){
+  Widget _signIn(LandingController controller, BuildContext context) {
     Key _formKey;
+    String email;
+    String password;
     return Column(
       children: [
         LandingTitle(
@@ -123,7 +129,7 @@ class _LandingState extends State<Landing> {
                   color: Color(0xff4285F4),
                 ),
               ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -138,8 +144,13 @@ class _LandingState extends State<Landing> {
         LandingBigButton(
           title: "Sign In",
           //TODO: Sign In + push to MainPage
-          onPressed: (){},
-        ),
+          onPressed: () {
+    auth.signInWithEmailAndPassword(email: email, password: password).then((_){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage()));
+          },
+        );
+    }
+    ),
         SizedBox(height: 16,),
         Text(
           "or",
@@ -162,80 +173,86 @@ class _LandingState extends State<Landing> {
 
   // TODO: Social SignIn with FireBase.
   // TODO: Better Social bubbles.
-  Widget _socialButtonRow(){
+  Widget _socialButtonRow() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              primary: Color(0xff3b5998),
-          ),
-          child: Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle
-            ),
-            child: Text(
-              "F",
-              style: TextStyle(
-                fontSize: 30.0,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+                primary: Color(0xff3b5998),
               ),
-            ),
-          ),
-          onPressed: (){
-            print('Facebook SignIn requested');
-          },
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              primary: Color(0xffDB4437),
-          ),
-          child: Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle
-            ),
-            child: Text(
-              "G",
-              style: TextStyle(
-                fontSize: 30.0,
+              child: Container(
+                width: 40.0,
+                height: 40.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle
+                ),
+                child: Text(
+                  "F",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                  ),
+                ),
               ),
-            ),
-          ),
-          onPressed: (){
-            print('Google SignIn requested');
-          },
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              primary: Color(0xff1DA1F2),
-          ),
-          child: Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle
-            ),
-            child: Text(
-              "T",
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
-          ),
-          onPressed: (){
-            print('Twitter SignIn requested');
-          },
-        ),
-      ],
-    );
+              onPressed: () async {
+    await signUpWithFacebook();
+    {print('Facebook SignIn requested');}
+
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      primary: Color(0xffDB4437),
+                    ),
+                    child: Container(
+                      width: 40.0,
+                      height: 40.0,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle
+                      ),
+                      child: Text(
+                        "G",
+                        style: TextStyle(
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                         await googleSignUp();
+                          {print('Google SignIn requested');}
+
+
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              primary: Color(0xff1DA1F2),
+                            ),
+                            child: Container(
+                              width: 40.0,
+                              height: 40.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle
+                              ),
+                              child: Text(
+                                "T",
+                                style: TextStyle(
+                                  fontSize: 30.0,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              print('Twitter SignIn requested');
+                            }
+                          );
+                        }
+                        );
+
+              }
+          )
+
+    ] );
   }
 }
